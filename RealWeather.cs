@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
+using System;
 
 namespace RealWeather;
 
@@ -39,12 +40,24 @@ internal class RealWeather : BaseUnityPlugin
             return;
         }
 
-        // TODO: sync weather from self.forecasts to EClass.world.weather.forecasts
+        if (IsSyncNeeded)
+        {
+            EClass.world.weather.forecasts = forecasts;
+            forecasts = new List<Weather.Forecast>();
+            Logger.LogInfo($"Weather data synced: {forecasts.Count} entries.");
+            IsSyncNeeded = false;
+        }
     }
 
     private async void StartFetchingWeather()
     {
         while (true) {
+            if (IsSyncNeeded)
+            {
+                await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(1));
+                continue;
+            }
+
             try
             {
                 // TODO: Get latitude and longitude from the config file
@@ -97,6 +110,7 @@ internal class RealWeather : BaseUnityPlugin
                                     condition = currentCondition.Value,
                                 });
                             }
+                            IsSyncNeeded = true;
 
                             Logger.LogInfo($"Updated forecasts: {forecasts.Count} entries.");
                         }
@@ -116,7 +130,7 @@ internal class RealWeather : BaseUnityPlugin
                 Logger.LogError($"Exception while fetching weather data: {ex.Message}");
             }
 
-            await System.Threading.Tasks.Task.Delay(3600 * 1000); // Fetch every hour
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromHours(1));
         }
     }
 }
