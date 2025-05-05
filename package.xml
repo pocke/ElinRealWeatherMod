@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Meta>
+  <title>Real Weather</title>
+  <id>me.pocke.real-weather</id>
+  <author>Masataka Pocke Kuwabara</author>
+  <loadPriority>100</loadPriority>
+  <version>0.23.129</version>
+  <tags>General</tags>
+  <description>
+TBD
+  </description>
+</Meta>
