@@ -1,10 +1,15 @@
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace RealWeather;
 public class ApiResponse
 {
-    public CurrentWeatherData Current { get; set; }
+    [JsonProperty("hourly")]
+    public HourlyWeatherData Hourly { get; set; }
 
-    public class CurrentWeatherData
+    public class HourlyWeatherData
     {
-        public int WeatherCode { get; set; }
+        [JsonProperty("weather_code")]
+        public List<int> WeatherCode { get; set; }
     }
 }

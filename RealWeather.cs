@@ -6,6 +6,7 @@ using HarmonyLib;
 using UnityEngine;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace RealWeather;
 
@@ -46,8 +47,8 @@ internal class RealWeather : BaseUnityPlugin
         while (true) {
             try
             {
-                // TODO: Get latitude and longitude fro the config file
-                string url = $"{apiUrlBase}?latitude=35.6895&longitude=139.6917&current=weather_code";
+                // TODO: Get latitude and longitude from the config file
+                string url = $"{apiUrlBase}?latitude=35.6895&longitude=139.6917&hourly=weather_code";
                 using (HttpClient client = new HttpClient())
                 {
                     HttpResponseMessage response = await client.GetAsync(url);
@@ -55,18 +56,49 @@ internal class RealWeather : BaseUnityPlugin
                     {
                         string jsonResponse = await response.Content.ReadAsStringAsync();
                         var weatherData = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(jsonResponse);
-                        if (weatherData != null && weatherData.Current != null)
+                        if (weatherData != null && weatherData.Hourly != null && weatherData.Hourly.WeatherCode != null && weatherData.Hourly.WeatherCode.Count() > 0)
                         {
-                            int wmoCode = weatherData.Current.WeatherCode;
-                            Weather.Condition condition = WeatherCode.GetWeatherConditionFromWMOCode(wmoCode);
-                            Logger.LogInfo($"Current weather condition: {condition}");
-
+                            List<int> wmoCodes = weatherData.Hourly.WeatherCode;
                             forecasts = new List<Weather.Forecast>();
-                            forecasts.Add(new Weather.Forecast
+
+                            Weather.Condition? currentCondition = null;
+                            int currentDuration = 0;
+
+                            foreach (int wmoCode in wmoCodes)
                             {
-                                duration = EClass.rnd(24) + 10,
-                                condition = condition,
-                            });
+                                Weather.Condition condition = WeatherCode.GetWeatherConditionFromWMOCode(wmoCode);
+
+                                if (currentCondition == condition)
+                                {
+                                    currentDuration++;
+                                }
+                                else
+                                {
+                                    if (currentCondition != null)
+                                    {
+                                        forecasts.Add(new Weather.Forecast
+                                        {
+                                            duration = currentDuration,
+                                            condition = currentCondition.Value,
+                                        });
+                                    }
+
+                                    currentCondition = condition;
+                                    currentDuration = 1;
+                                }
+                            }
+
+                            // Add the last forecast
+                            if (currentCondition != null)
+                            {
+                                forecasts.Add(new Weather.Forecast
+                                {
+                                    duration = currentDuration,
+                                    condition = currentCondition.Value,
+                                });
+                            }
+
+                            Logger.LogInfo($"Updated forecasts: {forecasts.Count} entries.");
                         }
                         else
                         {
