@@ -10,6 +10,16 @@
   <ItemGroup>
     <None Remove=".history\**"/>
 
+    <Reference Include="System.Net.Http">
+      <HintPath>$(ElinGamePath)\Elin_Data\Managed\System.Net.Http.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(ElinGamePath)\Elin_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Plugins.UI">
       <HintPath>$(ElinGamePath)\Elin_Data\Managed\Plugins.UI.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
