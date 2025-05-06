@@ -68,7 +68,7 @@ internal class RealWeather : BaseUnityPlugin
                 string url = $"{apiUrlBase}?latitude={Settings.Latitude}&longitude={Settings.Longitude}&hourly=weather_code";
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Add("User-Agent", $"RealWeatherMod/${ModInfo.Version} https://github.com/pocke/ElinRealWeatherMod");
+                    client.DefaultRequestHeaders.Add("User-Agent", $"RealWeatherMod/{ModInfo.Version}");
 
                     HttpResponseMessage response = await client.GetAsync(url);
                     if (response.IsSuccessStatusCode)
