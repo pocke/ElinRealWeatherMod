@@ -134,7 +134,7 @@ internal class RealWeather : BaseUnityPlugin
                 Logger.LogError($"Exception while fetching weather data: {ex.Message}");
             }
 
-            await System.Threading.Tasks.Task.Delay(TimeSpan.FromHours(1));
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromMinutes(15));
         }
     }
 }
