@@ -56,5 +56,7 @@ Pro tip: Right-click on Google Maps to get numbers like `35.6895,139.6917` (lati
 * Advancing in-game time will adjust the in-game weather to match future real-world weather (i.e., forecasts).
   * However, the weather will revert to the current real-world weather every 15 minutes.
 * It's unclear what happens when the Ether Disease "Living Humidifier" is active...
+
+https://github.com/pocke/ElinRealWeatherMod
   </description>
 </Meta>
