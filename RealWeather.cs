@@ -21,15 +21,18 @@ internal static class ModInfo
 [BepInPlugin(ModInfo.Guid, ModInfo.Name, ModInfo.Version)]
 internal class RealWeather : BaseUnityPlugin
 {
-    public bool IsSyncNeeded { get; private set; } = true;
+    public bool IsSyncNeeded { get; private set; } = false;
     public List<Weather.Forecast> forecasts = new List<Weather.Forecast>();
 
     static string apiUrlBase = "https://api.open-meteo.com/v1/forecast";
 
     private void Awake()
     {
-        Logger.LogInfo("RealWeather Mod is loaded!");
+        Settings.latitude = Config.Bind("Settings", "Latitude", 35.6895, "Latitude for weather data (default: Tokyo)");
+        Settings.longitude = Config.Bind("Settings", "Longitude", 139.6917, "Longitude for weather data (default: Tokyo)");
+
         StartFetchingWeather();
+        Logger.LogInfo("RealWeather Mod is loaded!");
     }
 
     private void Update()
@@ -42,9 +45,11 @@ internal class RealWeather : BaseUnityPlugin
 
         if (IsSyncNeeded)
         {
+            int size = forecasts.Count;
             EClass.world.weather.forecasts = forecasts;
             forecasts = new List<Weather.Forecast>();
-            Logger.LogInfo($"Weather data synced: {forecasts.Count} entries.");
+            EClass.world.weather.SetConditionFromForecast();
+            Logger.LogInfo($"Weather data synced: {size} entries.");
             IsSyncNeeded = false;
         }
     }
@@ -60,8 +65,7 @@ internal class RealWeather : BaseUnityPlugin
 
             try
             {
-                // TODO: Get latitude and longitude from the config file
-                string url = $"{apiUrlBase}?latitude=35.6895&longitude=139.6917&hourly=weather_code";
+                string url = $"{apiUrlBase}?latitude={Settings.Latitude}&longitude={Settings.Longitude}&hourly=weather_code";
                 using (HttpClient client = new HttpClient())
                 {
                     HttpResponseMessage response = await client.GetAsync(url);
