@@ -8,6 +8,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
 using System;
+using System.Threading;
 
 namespace RealWeather;
 
@@ -26,12 +27,15 @@ internal class RealWeather : BaseUnityPlugin
 
     static string apiUrlBase = "https://api.open-meteo.com/v1/forecast";
 
+    private CancellationTokenSource cancellationTokenSource;
+
     private void Awake()
     {
         Settings.latitude = Config.Bind("Settings", "Latitude", 35.6895, "Latitude for weather data (default: Tokyo)");
         Settings.longitude = Config.Bind("Settings", "Longitude", 139.6917, "Longitude for weather data (default: Tokyo)");
 
-        StartFetchingWeather();
+        cancellationTokenSource = new CancellationTokenSource();
+        StartFetchingWeather(cancellationTokenSource.Token);
         Logger.LogInfo("RealWeather Mod is loaded!");
     }
 
@@ -54,9 +58,19 @@ internal class RealWeather : BaseUnityPlugin
         }
     }
 
-    private async void StartFetchingWeather()
+    private void OnDestroy()
     {
-        while (true) {
+        try {
+            cancellationTokenSource.Cancel();
+        }
+        finally {
+            cancellationTokenSource.Dispose();
+        }
+    }
+
+    private async void StartFetchingWeather(CancellationToken token)
+    {
+        while (!token.IsCancellationRequested) {
             if (IsSyncNeeded)
             {
                 await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(1));
