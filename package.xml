@@ -7,6 +7,54 @@
   <version>0.23.129</version>
   <tags>General</tags>
   <description>
-TBD
+(English is below Japanese)
+
+イルヴァの天気を地球の天気に合わせるMODです。引きこもりお兄ちゃん、お姉ちゃんたちも部屋を出ずに天気がわかって楽しいね！
+
+現実の天気を15分ごとに取得し、ゲーム内の天気をそれに合わせます。
+パルミア・タイムスの天気予報コーナーも更新されます。
+
+## 設定
+
+どこの天候を取得するかを設定できます。デフォルトでは東京の天気を取得します。
+
+設定ファイルは`SteamLibrary\steamapps\common\Elin\BepInEx\config\me.pocke.real-weather.cfg`にあります。
+
+* `Latitude`: 緯度
+* `Longitude`: 経度
+
+Pro tip: Google Maps で右クリックすると出てくる`35.6895,139.6917`のような数字が`緯度,経度`です。これをクリックするとお手軽に値をコピーできます。
+
+## 注意点
+
+* 現実が雨か雪の場合、ゲーム内季節が冬であるか雪マップである場合は雪になり、そうでなければ雨になります。
+* ゲーム内時間を進めると未来の天気(つまり予報)に合わせてゲーム内天気が変化します。
+  * ただし15分ごとにその時点の天気に巻き戻ります。
+* エーテル病「生きた加湿器」が発症しているときにどうなるかは、よくわかってません……。
+
+----
+
+This is a mod that synchronizes the weather in Ylva with Earth weather.
+Even shut-in onii-chan and onee-chan can enjoy knowing the weather without leaving their rooms!
+
+The mod fetches real-world weather every 15 minutes and adjusts the in-game weather accordingly. The weather forecast section of the Palmia Times is also updated.
+
+## Settings
+
+You can configure which location's weather to fetch. By default, it fetches the weather for Tokyo.
+
+The configuration file is located at `SteamLibrary\steamapps\common\Elin\BepInEx\config\me.pocke.real-weather.cfg`.
+
+* `Latitude`
+* `Longitude`
+
+Pro tip: Right-click on Google Maps to get numbers like `35.6895,139.6917` (latitude,longitude). Clicking on these numbers makes it easy to copy the values.
+
+## Notes
+
+* If the real-world weather is rain or snow, the in-game weather will be snow if it's winter in the game or if you're in a snow map; otherwise, it will be rain.
+* Advancing in-game time will adjust the in-game weather to match future real-world weather (i.e., forecasts).
+  * However, the weather will revert to the current real-world weather every 15 minutes.
+* It's unclear what happens when the Ether Disease "Living Humidifier" is active...
   </description>
 </Meta>
